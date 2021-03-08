@@ -8,6 +8,7 @@ class TestSequencer extends Sequencer {
 			path.join(__dirname, './controller.test.js'),
 			path.join(__dirname, './router.test.js'),
 			path.join(__dirname, './http.test.js'),
+			path.join(__dirname, './browser.test.js'),
 		];
 
 		return tests.sort((testA, testB) => {

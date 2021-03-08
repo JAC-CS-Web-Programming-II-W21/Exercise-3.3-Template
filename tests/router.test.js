@@ -1,5 +1,5 @@
 const Router = require('../src/router/Router');
-const Response = require('../src/router/Response');
+const JsonResponse = require('../src/router/JsonResponse');
 const Request = require('../src/router/Request');
 const Pokemon = require('../src/models/Pokemon');
 const logger = require('../src/helpers/Logger');
@@ -21,10 +21,10 @@ beforeEach(async () => {
 
 test('Homepage was retrieved successfully.', async () => {
 	const request = new Request('GET', '/');
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(200);
 	expect(response.getMessage()).toBe('Homepage!');
 	expect(response.getPayload()).toMatchObject({});
@@ -32,10 +32,10 @@ test('Homepage was retrieved successfully.', async () => {
 
 test('Invalid path returned error.', async () => {
 	const request = new Request('GET', '/digimon');
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(404);
 	expect(response.getMessage()).toBe('Invalid request path!');
 	expect(response.getPayload()).toMatchObject({});
@@ -43,10 +43,10 @@ test('Invalid path returned error.', async () => {
 
 test('Invalid request method returned error.', async () => {
 	const request = new Request('PATCH', '/pokemon');
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(405);
 	expect(response.getMessage()).toBe('Invalid request method!');
 	expect(response.getPayload()).toMatchObject({});
@@ -55,10 +55,10 @@ test('Invalid request method returned error.', async () => {
 test('Pokemon created successfully.', async () => {
 	const pokemonData = generatePokemonData();
 	const request = new Request('POST', '/pokemon', pokemonData);
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(200);
 	expect(response.getMessage()).toBe('Pokemon created successfully!');
 	expect(response.getPayload()).toBeInstanceOf(Pokemon);
@@ -70,10 +70,10 @@ test('Pokemon created successfully.', async () => {
 test('Pokemon not created with blank name.', async () => {
 	const pokemonData = await generatePokemonData('');
 	const request = new Request('POST', '/pokemon', pokemonData);
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(400);
 	expect(response.getMessage()).toBe('Cannot create Pokemon: Missing name.');
 	expect(response.getPayload()).toMatchObject({});
@@ -82,10 +82,10 @@ test('Pokemon not created with blank name.', async () => {
 test('Pokemon not created with blank type.', async () => {
 	const pokemonData = await generatePokemonData(null, '');
 	const request = new Request('POST', '/pokemon', pokemonData);
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(400);
 	expect(response.getMessage()).toBe('Cannot create Pokemon: Missing type.');
 	expect(response.getPayload()).toMatchObject({});
@@ -95,10 +95,10 @@ test('Pokemon not created with duplicate name.', async () => {
 	const pokemon = await generatePokemon();
 	const pokemonData = await generatePokemonData(pokemon.getName());
 	const request = new Request('POST', '/pokemon', pokemonData);
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(400);
 	expect(response.getMessage()).toBe('Cannot create Pokemon: Duplicate name.');
 	expect(response.getPayload()).toMatchObject({});
@@ -111,10 +111,10 @@ test('All Pokemon found.', async () => {
 		await generatePokemon(),
 	];
 	const request = new Request('GET', '/pokemon');
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(200);
 	expect(response.getMessage()).toBe('Pokemon retrieved successfully!');
 	expect(Array.isArray(response.getPayload())).toBe(true);
@@ -131,10 +131,10 @@ test('All Pokemon found.', async () => {
 test('Pokemon found by ID.', async () => {
 	const pokemon = await generatePokemon();
 	const request = new Request('GET', `/pokemon/${pokemon.getId()}`);
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(200);
 	expect(response.getMessage()).toBe('Pokemon retrieved successfully!');
 	expect(Object.keys(response.getPayload()).includes('id')).toBe(true);
@@ -148,10 +148,10 @@ test('Pokemon found by ID.', async () => {
 test('Pokemon not found by wrong ID.', async () => {
 	const pokemonId = generateRandomId();
 	const request = new Request('GET', `/pokemon/${pokemonId}`);
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(400);
 	expect(response.getMessage()).toBe(`Cannot retrieve Pokemon: Pokemon does not exist with ID ${pokemonId}.`);
 	expect(response.getPayload()).toMatchObject({});
@@ -161,10 +161,10 @@ test('Pokemon updated successfully.', async () => {
 	const pokemon = await generatePokemon();
 	const newPokemonData = generatePokemonData();
 	let request = new Request('PUT', `/pokemon/${pokemon.getId()}`, newPokemonData);
-	let router = new Router(request, new Response());
+	let router = new Router(request, new JsonResponse());
 	let response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(200);
 	expect(response.getMessage()).toBe('Pokemon updated successfully!');
 	expect(response.getPayload().getId()).toBe(pokemon.getId());
@@ -173,7 +173,7 @@ test('Pokemon updated successfully.', async () => {
 	expect(response.getPayload().getName()).not.toBe(pokemon.name);
 
 	request = new Request('GET', `/pokemon/${pokemon.getId()}`);
-	router = new Router(request, new Response());
+	router = new Router(request, new JsonResponse());
 	response = await router.dispatch();
 
 	expect(response.getStatusCode()).toBe(200);
@@ -184,10 +184,10 @@ test('Pokemon updated successfully.', async () => {
 test('Pokemon not updated with non-existant ID.', async () => {
 	const pokemonId = generateRandomId();
 	const request = new Request('PUT', `/pokemon/${pokemonId}`, { name: 'NewName' });
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(400);
 	expect(response.getMessage()).toBe(`Cannot update Pokemon: Pokemon does not exist with ID ${pokemonId}.`);
 	expect(response.getPayload()).toMatchObject({});
@@ -196,10 +196,10 @@ test('Pokemon not updated with non-existant ID.', async () => {
 test('Pokemon not updated with blank name.', async () => {
 	const pokemon = await generatePokemon();
 	const request = new Request('PUT', `/pokemon/${pokemon.getId()}`, { name: '' });
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(400);
 	expect(response.getMessage()).toBe('Cannot update Pokemon: No update parameters were provided.');
 	expect(response.getPayload()).toMatchObject({});
@@ -208,10 +208,10 @@ test('Pokemon not updated with blank name.', async () => {
 test('Pokemon not updated with blank type.', async () => {
 	const pokemon = await generatePokemon();
 	const request = new Request('PUT', `/pokemon/${pokemon.getId()}`, { type: '' });
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(400);
 	expect(response.getMessage()).toBe('Cannot update Pokemon: No update parameters were provided.');
 	expect(response.getPayload()).toMatchObject({});
@@ -220,10 +220,10 @@ test('Pokemon not updated with blank type.', async () => {
 test('Pokemon deleted successfully.', async () => {
 	const pokemon = await generatePokemon();
 	let request = new Request('DELETE', `/pokemon/${pokemon.getId()}`);
-	let router = new Router(request, new Response());
+	let router = new Router(request, new JsonResponse());
 	let response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(200);
 	expect(response.getMessage()).toBe('Pokemon deleted successfully!');
 	expect(Object.keys(response.getPayload()).includes('id')).toBe(true);
@@ -234,7 +234,7 @@ test('Pokemon deleted successfully.', async () => {
 	expect(response.getPayload().getType()).toBe(pokemon.getType());
 
 	request = new Request('GET', `/pokemon/${pokemon.getId()}`);
-	router = new Router(request, new Response());
+	router = new Router(request, new JsonResponse());
 	response = await router.dispatch();
 
 	expect(response.getStatusCode()).toBe(400);
@@ -245,10 +245,10 @@ test('Pokemon deleted successfully.', async () => {
 test('Pokemon not deleted with non-existant ID.', async () => {
 	const pokemonId = generateRandomId();
 	const request = new Request('DELETE', `/pokemon/${pokemonId}`);
-	const router = new Router(request, new Response());
+	const router = new Router(request, new JsonResponse());
 	const response = await router.dispatch();
 
-	expect(response).toBeInstanceOf(Response);
+	expect(response).toBeInstanceOf(JsonResponse);
 	expect(response.getStatusCode()).toBe(400);
 	expect(response.getMessage()).toBe(`Cannot delete Pokemon: Pokemon does not exist with ID ${pokemonId}.`);
 	expect(response.getPayload()).toMatchObject({});

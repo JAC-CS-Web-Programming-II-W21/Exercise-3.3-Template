@@ -15,16 +15,11 @@ let page;
 beforeAll(async () => {
 	browser = await chromium.launch({
 		headless: false,
-		slowMo: 1000,
+		// slowMo: 1000, // Uncomment this if you want to make the tests slower.
 		size: { width: 1280, height: 720 },
 	});
 
-	context = await browser.newContext({
-		// recordVideo: {
-		// 	dir: './videos/',
-		// 	size: { width: 1280, height: 720 },
-		// },
-	});
+	context = await browser.newContext();
 });
 
 afterAll(async () => {

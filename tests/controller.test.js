@@ -1,6 +1,6 @@
 const Pokemon = require('../src/models/Pokemon');
 const PokemonController = require('../src/controllers/PokemonController');
-const Response = require('../src/router/Response');
+const JsonResponse = require('../src/router/JsonResponse');
 const Request = require('../src/router/Request');
 const logger = require('../src/helpers/Logger');
 const {
@@ -15,7 +15,7 @@ logger.toggleConsoleLog(false);
 test('PokemonController handled a POST request.', async () => {
 	const pokemonData = generatePokemonData();
 	const request = new Request('POST', '/pokemon', pokemonData);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 	const response = await controller.doAction();
 
 	expect(response.getStatusCode()).toBe(200);
@@ -29,7 +29,7 @@ test('PokemonController handled a POST request.', async () => {
 test('PokemonController threw an exception handling a POST request with blank name.', async () => {
 	const pokemonData = generatePokemonData('');
 	const request = new Request('POST', '/pokemon', pokemonData);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 
 	await expect(controller.doAction()).rejects.toMatchObject({
 		name: 'PokemonException',
@@ -40,7 +40,7 @@ test('PokemonController threw an exception handling a POST request with blank na
 test('PokemonController threw an exception handling a POST request with blank type.', async () => {
 	const pokemonData = generatePokemonData(null, '');
 	const request = new Request('POST', '/pokemon', pokemonData);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 
 	await expect(controller.doAction()).rejects.toMatchObject({
 		name: 'PokemonException',
@@ -52,7 +52,7 @@ test('PokemonController threw an exception handling a POST request with duplicat
 	const pokemon = await generatePokemon();
 	const pokemonData = generatePokemonData(pokemon.getName());
 	const request = new Request('POST', '/pokemon', pokemonData);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 
 	await expect(controller.doAction()).rejects.toMatchObject({
 		name: 'PokemonException',
@@ -62,7 +62,7 @@ test('PokemonController threw an exception handling a POST request with duplicat
 
 test('PokemonController threw an exception handling a GET (all) request with no Pokemon in database.', async () => {
 	const request = new Request('GET', '/pokemon');
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 	const response = await controller.doAction();
 
 	expect(response.getStatusCode()).toBe(200);
@@ -77,7 +77,7 @@ test('PokemonController handled a GET (all) request with 3 Pokemon in database.'
 	await generatePokemon();
 
 	const request = new Request('GET', '/pokemon');
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 	const response = await controller.doAction();
 
 	expect(response.getStatusCode()).toBe(200);
@@ -92,7 +92,7 @@ test('PokemonController handled a GET (all) request with 3 Pokemon in database.'
 test('PokemonController handled a GET (one) request.', async () => {
 	const pokemon = await generatePokemon();
 	const request = new Request('GET', `/pokemon/${pokemon.getId()}`);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 	const response = await controller.doAction();
 
 	expect(response.getStatusCode()).toBe(200);
@@ -106,7 +106,7 @@ test('PokemonController handled a GET (one) request.', async () => {
 test('PokemonController threw an exception handling a GET request with non-existant ID.', async () => {
 	const pokemonId = generateRandomId();
 	const request = new Request('GET', `/pokemon/${pokemonId}`);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 
 	await expect(controller.doAction()).rejects.toMatchObject({
 		name: 'PokemonException',
@@ -118,7 +118,7 @@ test('PokemonController handled a PUT request.', async () => {
 	const pokemon = await generatePokemon();
 	const newPokemonData = generatePokemonData();
 	const request = new Request('PUT', `/pokemon/${pokemon.getId()}`, newPokemonData);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 	const response = await controller.doAction();
 
 	expect(response.getStatusCode()).toBe(200);
@@ -134,7 +134,7 @@ test('PokemonController handled a PUT request.', async () => {
 test('PokemonController threw an exception handling a PUT request with non-existant ID.', async () => {
 	const pokemonId = generateRandomId();
 	const request = new Request('PUT', `/pokemon/${pokemonId}`, { name: 'Charmander' });
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 
 	await expect(controller.doAction()).rejects.toMatchObject({
 		name: 'PokemonException',
@@ -145,7 +145,7 @@ test('PokemonController threw an exception handling a PUT request with non-exist
 test('PokemonController threw an exception handling a PUT request with no update fields.', async () => {
 	const pokemon = await generatePokemon();
 	const request = new Request('PUT', `/pokemon/${pokemon.getId()}`, { name: '', type: '' });
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 
 	await expect(controller.doAction()).rejects.toMatchObject({
 		name: 'PokemonException',
@@ -156,7 +156,7 @@ test('PokemonController threw an exception handling a PUT request with no update
 test('PokemonController handled a DELETE request.', async () => {
 	const pokemon = await generatePokemon();
 	const request = new Request('DELETE', `/pokemon/${pokemon.getId()}`);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 	const response = await controller.doAction();
 
 	expect(response.getStatusCode()).toBe(200);
@@ -170,7 +170,7 @@ test('PokemonController handled a DELETE request.', async () => {
 test('PokemonController threw an exception handling a DELETE request with non-existant ID.', async () => {
 	const pokemonId = generateRandomId();
 	const request = new Request('DELETE', `/pokemon/${pokemonId}`);
-	const controller = new PokemonController(request, new Response());
+	const controller = new PokemonController(request, new JsonResponse());
 
 	await expect(controller.doAction()).rejects.toMatchObject({
 		name: 'PokemonException',
