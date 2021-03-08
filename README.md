@@ -73,25 +73,33 @@
       ```
 
    5. Save `.bashrc` and close it.
-   6. Run `sudo apt update`.
-   7. Run:
+   6. Run `sudo apt update -y`.
+   7. Run `sudo apt upgrade -y`.
+   8. Run `sudo apt-get update -y`.
+   9. Run `sudo apt-get upgrade -y`.
+   10. Run:
 
-      ```bash
-      sudo apt-get install libnss3\
-                libnspr4\
-                libatk1.0-0\
-                libatk-bridge2.0-0\
-                libcups2\
-                libxkbcommon0\
-                libgbm1\
-                libgtk-3-0\
-                libpango-1.0-0\
-                libcairo2\
-                libasound2\
-                libatspi2.0-0
-      ```
+       ```bash
+       sudo apt-get install libnss3\
+                 libnspr4\
+                 libatk1.0-0\
+                 libatk-bridge2.0-0\
+                 libcups2\
+                 libdrm2\
+                 libxkbcommon0\
+                 libxcomposite1\
+                 libxdamage1\
+                 libxfixes3\
+                 libxrandr2\
+                 libgbm1\
+                 libgtk-3-0\
+                 libpango-1.0-0\
+                 libcairo2\
+                 libatspi2.0-0\
+                 libglu1-mesa -y
+       ```
 
-   8. Close and reopen all open terminals.
+   11. Close and reopen all open terminals.
 6. Navigate to the exercise folder and run `npm install`.
 7. Open `tests/playwright.test.js` and type something that you want Google to search for on line 33 in the `page.type()` function call.
 8. Run `npm run test -- playwright.test.js` and watch your XLaunch window. You should see it start a Chromium browser and do a Google search based on what you wrote in the test! How cool is that?! 😎
