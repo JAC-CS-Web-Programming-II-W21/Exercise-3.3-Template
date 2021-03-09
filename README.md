@@ -171,13 +171,13 @@ If you're curious as to how this works, please take a look at the constructor of
 
 ### ↩️ HTTP Redirect
 
-Ever wonder what the _refresh_ button in your web browser actually does? How does it actually "refresh" a page? It's quite simple - the refresh button re-sends whatever the last HTTP request was.
+Ever wonder how the _refresh_ button in your web browser actually works? How does it actually "refresh" a page? It's quite simple - the refresh button re-sends whatever the last HTTP request was.
 
 Let's look at the diagram below. Suppose you make a `POST /order` request and get a `200 OK` response back. If you click the refresh button now, the browser will make the last request that was sent out - meaning that you will have created another order! No one likes paying twice...
 
 ![Refresh Post](images/3.3.1-Refresh-Post.png)
 
-Let's look at the diagram below to learn how we can mitigate this problem using redirects. Suppose you make a `POST /order` request, but instead of getting a `200 OK` response back, you get a `303 SEE OTHER` response. The `3xx` range of HTTP response codes all have to do with redirects and you can read up about them [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages). As soon as the browser sees that the response is a `303`, it will immediately make a `GET` request to the location specified in the responses `Location` header. The server will receive the `GET /success` request and send back a `200 OK`. If you click the refresh button now, the browser will make the last request that was sent out - meaning that you will receive the success page again but the actual order will only have been made once! Phew, that was close..
+Let's look at the diagram below to learn how we can mitigate this problem using redirects. Suppose you make a `POST /order` request, but instead of getting a `200 OK` response back, you get a `303 SEE OTHER` response. The `3xx` range of HTTP response codes all have to do with redirects and you can read up about them [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages). As soon as the browser sees that the response is a `303`, it will immediately make a `GET` request to the location specified in the responses `Location` header. The server will receive the `GET /success` request and send back a `200 OK`. If you click the refresh button now, the browser will make the last request that was sent out - meaning that you will receive the success page again but the actual order will only have been made once! Phew, that was close...
 
 ![Redirect](images/3.3.2-Redirect.png)
 
