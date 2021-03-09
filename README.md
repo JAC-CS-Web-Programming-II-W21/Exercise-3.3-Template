@@ -219,7 +219,7 @@ Add two methods to `PokemonController`: `getNewForm()` and `getEditForm()`. Both
 
 ### 🗺️ Routes
 
-| Request Method | Query String         | Action                           | Redirect/Template ⭐    | Description                               |
+| Request Method | Path                 | Action                           | Redirect/Template ⭐    | Description                               |
 | -------------- | -------------------- | -------------------------------- | ---------------------- | ----------------------------------------- |
 | `GET`          | `/`                  | `HomeController::home`           | `HomeView`             | Display the homepage.                     |
 | `ANY`          | `/{garbage}`         | `ErrorController::error`         | `ErrorView`            | Display a 404 error page.                 |
