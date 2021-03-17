@@ -231,7 +231,7 @@ Add two methods to `PokemonController`: `getNewForm()` and `getEditForm()`. Both
 | `PUT`          | `/pokemon/{id}`      | `PokemonController::edit`        | `/pokemon/{id}`        | Edit the specified Pokemon.               |
 | `DELETE`       | `/pokemon/{id}`      | `PokemonController::destroy`     | `/pokemon`             | Delete the specified Pokemon.             |
 
-> ⭐ `*.hbs` means render that template. `/*` means redirect to that path.
+> ⭐ `/*` means redirect to that path, otherwise, render the specified view.
 
 Your main task is to create all of the template files in the `src/views` folder so that the automated browser tests can successfully navigate through the application.
 
